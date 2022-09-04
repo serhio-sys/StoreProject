@@ -1,0 +1,146 @@
+{% extends 'Users/reset_pass_confirm.html' %}
+{% load static %}
+{%block nav%}
+        <nav class="navbar navbar-expand-xl fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand ms-5 text-center w-100" href="{% url 'home' %}">{{name}}</a>
+            </div>
+          </nav>
+{%endblock nav%}
+{% block cont %}
+<div class="z-in korzina">
+    <div class="kor-title">
+        Ваша корзина
+    </div>
+    <div class="kor-body">
+        {% if basket.count >= 1 %}
+            {% for i in page_obj %}
+            <div class="kor-item">
+                  <div class="kor-item-img">
+                  <img src="{{i.img.url}}" />
+                  
+                <div class="kor-item-info">
+                  <div> Имя товара: {{i.name}}</div>
+                  <div> Цена: {{i.cost}}</div> 
+                  <a href="{{i.get_url_rem}}">Убрать</a>
+                </div>
+                  </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <span class="text-center w-100">Корзина пуста</span>
+        {% endif %}
+    </div>
+    <div class="mt-3 w-100 d-flex justify-content-center">
+      {% if basket.count >= 1 %}
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="">&lt;</a>
+          </li>
+          {% endif %}
+          {% for p in page_obj.paginator.page_range %}
+             {% if page_obj.number == p %}
+          <li class="page-item active">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="">{{ p }}</a>
+          </li>
+              {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2  %}
+          <li class="page-item">
+              <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+          </li>
+              {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&gt;</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="">&gt;</a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+    <div class="kor-title" style="font-size: 1.8em;">К оплате: {{basket.AllPrice}}</div>
+    <div class="buttons">
+        <a href="">Оплатить</a>
+        <a href="{% url 'clean' %}">Очистить корзину</a>
+    </div>
+</div>
+{% endblock cont %}
+{% block styles %}
+{% endblock styles %}
+{% block st %}
+    <style>
+      body{
+        overflow:visible;
+      }
+      .kor-item{ 
+    width: 200px;
+    height: 200px;
+  }
+  .kor-item-img{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all ease 300ms;
+  }
+  .kor-item-img:hover .kor-item-info{
+    bottom: 0;
+  }
+  .kor-item-info{
+    position: absolute;
+    bottom: -35%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    font-weight: 100;
+    gap: 0.5em;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: all ease 300ms;
+  }
+  .buttons a,
+  .kor-item-info a{
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+    padding: 1px 20px;
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    border-radius: 0.4em;
+    font-style: normal;
+    transition: all ease-in-out 300ms;
+  }
+  .kor-item-info a:hover{
+    color: black;
+    background-color: white;
+  }
+  .buttons a{
+    width: auto;
+  }
+  .buttons a:hover{
+    color: black;
+    background-color: white;
+  }
+    </style>
+    {% endblock st %}
+{%block continue%}
+{%endblock continue%}
+{%block script%}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{%endblock script%}

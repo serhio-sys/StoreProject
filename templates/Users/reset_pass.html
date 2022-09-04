@@ -1,0 +1,57 @@
+{% extends 'home.html' %}
+{% load static %}
+{%block nav%}
+        <nav class="navbar navbar-expand-xl fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand ms-5" href="{% url 'home' %}">{{name}}</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWithDropdown" aria-controls="navbarWithDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse show" id="navbarWithDropdown">
+                <ul class="navbar-nav ms-auto me-5">
+                    <li class="nav-item raiting">
+                        <div class="h-100 d-flex align-items-center">
+                            <a href="">Наш рейтинг - ⭐⭐⭐⭐⭐ </a>
+                        </div>
+                    </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+{%endblock nav%}
+{% block cont %}
+<div class="z-in">
+    <form action="" method="post" class="form form-reg form_active">
+        <h2 class="mb-4 text-light">Форма восстановления пароля</h2>
+        <div class="form-erros-signup mb-2"></div>
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for f in form %}
+        <div class="form_part">
+          {{ f }}
+          <label class="form-label text-light" for="{{ f.id_for_label }}">{{f.label}} </label>
+          <strong>{{ f.errors }}</strong>
+        </div>
+        {% endfor %}
+        <div class="w-100 mt-3"><button class="form-button" type="submit">Восстановить</button></div>
+        <div class="w-100 mt-2 text-center text-light">
+            {{step}}
+        </div>
+    </form>
+</div>
+{% endblock cont %}
+{% block styles %}
+{% endblock styles %}
+{% block st %}
+    <style>
+      body{
+        overflow:visible;
+      }
+    </style>
+    {% endblock st %}
+{%block continue%}
+{%endblock continue%}
+{%block script%}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{%endblock script%}

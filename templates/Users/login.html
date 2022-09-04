@@ -1,0 +1,69 @@
+{% extends 'home.html' %}
+{% load static %}
+{%block nav%}
+        <nav class="navbar navbar-expand-xl fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand ms-5 w-100 text-center" href="{% url 'home' %}">{{name}}</a>
+            </div>
+          </nav>
+{%endblock nav%}
+{% block cont %}
+    <a class="point">{{soname}}</a>
+{% endblock cont %}
+{% block styles %}
+{% endblock styles %}
+{% block st %}
+    <style>
+      body{
+        overflow:visible;
+      }
+    </style>
+    {% endblock st %}
+{%block continue%}
+<div class="w-100 bg-dark text center">
+<p class="text-light fs-3">Формы немного ниже</p>
+</div>
+<div class="content_foot center text-light flex-column">
+  <div class="z-in">
+    <div class="d-flex justify-content-center btns">
+      <span class="btn-reg reg btn-active">Регистрация</span>
+      <span class="btn-reg log">Вход</span>
+    </div>
+      <form action="{% url 'regi' %}" method="post" class="form form-reg form_active">
+      <h2 class="mb-4">Регистрационная форма</h2>
+      <div class="form-erros-signup mb-2"></div>
+      {% csrf_token %}
+      <div class="form-error">{{ form.non_field_errors }}</div>
+      {% for f in form_reg %}
+      <div class="form_part">
+        {{ f }}
+        <label class="form-label" for="{{ f.id_for_label }}">{{f.label}} </label>
+        <strong>{{ f.errors }}</strong>
+      </div>
+      {% endfor %}
+      <div class="w-100 mt-3"><button class="form-button" type="submit">Зарегистрироваться</button></div>
+      </form>
+      <form action="{% url 'log' %}" method="post" class="form form-log">
+          <h2 class="mb-4">Авторизационная форма</h2>
+          <div class="form-erros-login mb-2"></div>
+          {% csrf_token %}
+          <div class="form-error">{{ form.non_field_errors }}</div>
+            {% for f in form_log %}
+            <div class="form_part">
+            {{ f }}
+            <label class="form-label" for="{{ f.id_for_label }}">{{f.label}} </label>
+            <strong>{{ f.errors }}</strong>
+          </div>
+          {% endfor %}
+          <div class="d-flex gap-1 w-100 mt-2"><span>Вы забыли пароль?</span><a href="{% url 'reset' %}">Восстановить</a></div>
+          <div class="w-100 mt-2  "><button class="form-button" type="submit">Войти</button></div>
+      </form>
+  </div>
+</div>
+{%endblock continue%}
+{%block script%}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/auth_front.js' %}"></script>
+<script src="{% static 'js/ajax_registr.js' %}"></script>
+{%endblock script%}
