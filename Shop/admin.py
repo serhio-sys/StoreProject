@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item,Category,SubCategory
+from .models import Item,Category,SubCategory,Raiting,Comments
 
 class ItemAdm(admin.ModelAdmin):
     list_display = ("id","name","basket")
@@ -14,3 +14,5 @@ class CategoryAdm(admin.ModelAdmin):
 admin.site.register(Item,ItemAdm)
 admin.site.register(Category,CategoryAdm)
 admin.site.register(SubCategory)
+admin.site.register(Comments)
+admin.site.register(Raiting)

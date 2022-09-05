@@ -25,7 +25,7 @@ const sendSearchData = (item) => {
           data.forEach(item=>{
             results.innerHTML += `
             <div class="item_">
-            ${item}  
+            <a href=${item.link}>${item.name}</a>  
             </div>
             `
           })

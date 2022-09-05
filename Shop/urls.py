@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AddToBasket, CategoryListView, ItemDetailView, ShopPageView, ajax_results,ResultSearchView
+from .views import AddToBasket, CategoryListView, CreateComment, ItemDetailView, ShopPageView, ajax_results,ResultSearchView
 
 urlpatterns = [
     path('',ShopPageView.as_view(),name="home2"),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('search-results/search/',ajax_results,name='serchng'),
     path('category/<pk>/',CategoryListView.as_view(),name='catlist'),
     path('item-detail/<pk>/view',ItemDetailView.as_view(),name='item'),
+    path('<pk>/addcomment/',CreateComment.as_view(),name='comment'),
     ]

@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -43,6 +44,15 @@ class Item(models.Model):
         Basket,verbose_name="BASKET",on_delete=models.SET_NULL,default=None,blank=True,null=True
     )
 
+    def get_avarage_raiting(self):
+        all = self.raiting_set.all()
+        count = 0
+        allcount = 0
+        for i in list(all):
+            allcount += i.num
+            count += 1
+        return int(allcount/count)
+
     count = models.PositiveSmallIntegerField("COUNT")
 
     def __str__(self):
@@ -57,6 +67,33 @@ class Item(models.Model):
     def get_url_detail(self):
         return reverse('item', kwargs={'pk':self.pk})
 
+    def get_url_com(self):
+        return reverse('comment', kwargs={'pk':self.pk})
+
     class Meta():
             verbose_name = "ITEM"
             verbose_name_plural = "ITEMs"
+
+class Raiting(models.Model):
+    user = models.ForeignKey(
+        User, verbose_name="USER", on_delete=models.CASCADE,blank=True,null=True
+    )
+    item = models.ForeignKey(
+        'Item',verbose_name="ITEM",on_delete=models.CASCADE,blank=True,null=True
+    )
+    num = models.PositiveSmallIntegerField('Raiting',default=0)
+
+    def get_add_raiting(self):
+        return reverse('',kwargs={'pk':self.pk})
+
+class Comments(models.Model):
+    user = models.ForeignKey(
+        User, verbose_name="USER", on_delete=models.CASCADE,blank=True,null=True
+    )
+    item = models.ForeignKey(
+        'Item',verbose_name="ITEM",on_delete=models.CASCADE,blank=True,null=True
+    )
+    comment = models.TextField('COMMENT')
+
+    def get_add_comm(self):
+        return reverse('',kwargs={'pk':self.pk})

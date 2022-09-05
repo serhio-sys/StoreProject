@@ -1,12 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.generic import View,DetailView
 from Shop.models import Category, Item
 from Users.models import Basket
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .form import FilterItems, SearchField
+from .form import FilterItems, SearchField,CommentForm
 
 def ajax_results(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -16,7 +17,11 @@ def ajax_results(request):
         if len(items) > 0 and len(item) > 0:
             names=list()
             for i in list(items):
-                names.append(i.name) 
+                item = {
+                    'name':i.name,
+                    'link':i.get_url_detail(),
+                }
+                names.append(item) 
             res = names
         else:
             res = 'Ничего не найдено'
@@ -93,8 +98,27 @@ class CategoryListView(View):
         cats = Category.objects.all()
         return render(request=request,template_name="Shop/catlist.html",context={'page_obj':page_obj,'name':"Магазин Копеечка",'form_filt':form,'cats':cats,'cat_sel':cat_sel})
 
-class ItemDetailView(DetailView):
-    model = Item
-    template_name = "Shop/detail.html"
-    context_object_name = 'item'
-    extra_context = {'name':"Магазин Копеечка",'form_s':''}
+class ItemDetailView(View):
+
+    def get(self,request,**kwargs):
+        item = Item.objects.get(pk=kwargs['pk'])
+        comms = item.comments_set.all()[:3]
+        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms})
+
+
+class CreateComment(LoginRequiredMixin,View):
+
+    def post(self,request,*args,**kwargs):
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.user = request.user
+            item.item = Item.objects.get(pk=kwargs['pk'])
+            item.save()
+        return redirect('item',kwargs['pk'])
+
+class AddOrRemoveStars(LoginRequiredMixin,View):
+
+    def post(self,request,*args,**kwargs):
+
+        return redirect('item',kwargs['pk'])
