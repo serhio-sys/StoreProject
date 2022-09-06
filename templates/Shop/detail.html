@@ -62,6 +62,17 @@
         display: flex;
         flex-direction: column;
      }
+     .stars{
+      display: flex;
+      height: 30px;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4em;
+     }
+     .star{
+      height: 30px;
+      width: 30px;
+     }
     </style>
     {% endblock st %}
         {% block cont %}
@@ -82,7 +93,16 @@
           <div class="thing-body">
             <div class="thing-info_detail">
               <div class="stars">
-                sadsa
+                {% with '1 2 3 4 5' as list_st %}
+                    {% for star in list_st.split %}
+                      {% if raiting|slugify >= star|slugify %}
+                      <img src="{% static 'img/star.png' %}" class="star"/>
+                      {% else %}
+                      <img src="{% static 'img/empty.png' %}" class="star"/>
+                    {% endif %}
+                  {% endfor %}
+                {% endwith %}
+                {{raiting}}
               </div>
                 <div class="mt-2">
                     <form action="" method="post">

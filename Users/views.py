@@ -147,9 +147,15 @@ class BasketClean(LoginRequiredMixin,View):
         basket.save()
         itemrem = Item.objects.get(pk=pk)
         allitem = Item.objects.get(basket=None,name=itemrem.name)
-        allitem.count += 1
-        allitem.save()
-        itemrem.delete()
+        if itemrem.count == 1:
+            allitem.count += 1
+            allitem.save()
+            itemrem.delete()
+        else:
+            itemrem.count -= 1
+            allitem.count += 1
+            allitem.save()
+            itemrem.save()
         return redirect('basket') 
     
 class BasketAllClean(LoginRequiredMixin,View):
@@ -160,9 +166,23 @@ class BasketAllClean(LoginRequiredMixin,View):
         allitem = Item.objects.filter(basket=basket)
         for i in list(allitem):
             abstritem = Item.objects.get(basket=None,name=i.name)
-            abstritem.count += 1
-            abstritem.save()
-            basket.count -= 1
-            basket.save()
-            i.delete()
+            if i.count == 1:
+                abstritem.count += 1
+                abstritem.save()
+                basket.count -= 1
+                basket.save()
+                i.delete()
+            count = i.count
+            for num in range(0,count+1):
+                if i.count == 1:
+                    abstritem.count += 1
+                    basket.count -= 1
+                    basket.save()
+                    abstritem.save()
+                    i.delete()            
+                    return redirect('basket')   
+                else:
+                    i.count -= 1  
+                    abstritem.count += 1
+                    basket.count -= 1
         return redirect('basket')

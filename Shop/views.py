@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -69,7 +70,16 @@ class AddToBasket(LoginRequiredMixin,View):
         basket = Basket.objects.get(user=request.user)
         basket.count += 1
         basket.save()
-        Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=1,basket=basket)
+        created = None
+        try:
+            created = Item.objects.get(name=item.name,basket=basket)
+        except:
+            Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=1,basket=basket)
+            item.count -= 1
+            item.save()
+            return redirect('home2')
+        created.count += 1
+        created.save()
         item.count -= 1
         item.save()
         return redirect('home2')
@@ -102,8 +112,16 @@ class ItemDetailView(View):
 
     def get(self,request,**kwargs):
         item = Item.objects.get(pk=kwargs['pk'])
-        comms = item.comments_set.all()[:3]
-        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms})
+        comms = item.comments_set.all().select_related('user')[:3]
+        rait = item.raiting_set.all().select_related('user')
+        if len(list(rait))==0:
+            rait = 0
+        else:
+            allsum = 0
+            for r in list(rait):
+                allsum+=r.num
+            rait = allsum/len(list(rait))
+        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms,'raiting':int(rait)})
 
 
 class CreateComment(LoginRequiredMixin,View):
