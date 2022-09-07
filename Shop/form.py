@@ -1,4 +1,3 @@
-from tkinter.tix import Tree
 from django import forms
 from .models import Comments
 
@@ -14,4 +13,15 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
         fields = ('comment',)
+
+class StarsForm(forms.Form):
+    num = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder':'От 1 до 5 звёзд','class':'form-control form-control-sm'}),min_value=1,max_value=5,label='')
+
+class AddToKorzina(forms.Form):
+    def __init__(self, maxi, *args, **kwargs):
+        super(AddToKorzina, self).__init__(*args, **kwargs)
+        self.fields['num'] = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder':f'От 1 до {maxi}','class':'form-control'}),min_value=1,max_value=maxi,label='')
+
+    num = forms.IntegerField(label='',min_value=1)
+    
     

@@ -1,14 +1,14 @@
-from unicodedata import name
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import View,DetailView
-from Shop.models import Category, Item
+from django.views.generic import View
+from Shop.models import Category, Item, Raiting
 from Users.models import Basket
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .form import FilterItems, SearchField,CommentForm
+from .form import AddToKorzina, FilterItems, SearchField,CommentForm, StarsForm
+
 
 def ajax_results(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -65,22 +65,24 @@ class ShopPageView(View):
         return render(request=request,template_name="Shop/home.html",context={'page_obj':page_obj,'name':"Магазин Копеечка",'form_filt':form,'cats':cats})
 
 class AddToBasket(LoginRequiredMixin,View):
-    def post(self,request,pk):
+    def post(self,request,pk,num):
+        if num==0:
+            num=int(request.POST['num'])
         item = Item.objects.get(pk=pk)
         basket = Basket.objects.get(user=request.user)
-        basket.count += 1
+        basket.count += num
         basket.save()
         created = None
         try:
             created = Item.objects.get(name=item.name,basket=basket)
         except:
-            Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=1,basket=basket)
-            item.count -= 1
+            Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=num,basket=basket)
+            item.count -= num
             item.save()
             return redirect('home2')
-        created.count += 1
+        created.count += num
         created.save()
-        item.count -= 1
+        item.count -= num
         item.save()
         return redirect('home2')
 
@@ -121,7 +123,9 @@ class ItemDetailView(View):
             for r in list(rait):
                 allsum+=r.num
             rait = allsum/len(list(rait))
-        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms,'raiting':int(rait)})
+        form_add = AddToKorzina(maxi=item.count)
+        set_stars = StarsForm()
+        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms,'raiting':int(rait),'addform':form_add,'starsform':set_stars})
 
 
 class CreateComment(LoginRequiredMixin,View):
@@ -137,6 +141,12 @@ class CreateComment(LoginRequiredMixin,View):
 
 class AddOrRemoveStars(LoginRequiredMixin,View):
 
-    def post(self,request,*args,**kwargs):
-
+    def get(self,request,*args,**kwargs):
+        item=Item.objects.get(pk=kwargs['pk'])
+        try:
+            rait = Raiting.objects.get(item=item,user=request.user)
+            rait.num = request.GET.get('num')
+        except Raiting.DoesNotExist:
+            rait = Raiting(num=request.GET.get('num'),user=request.user,item=item)
+        rait.save()
         return redirect('item',kwargs['pk'])

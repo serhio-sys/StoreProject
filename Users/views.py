@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView,View
@@ -186,3 +187,6 @@ class BasketAllClean(LoginRequiredMixin,View):
                     abstritem.count += 1
                     basket.count -= 1
         return redirect('basket')
+
+def pageNotFound(request, exception):
+    return render(request=request,template_name='404.html',status=404)

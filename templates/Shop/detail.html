@@ -47,7 +47,6 @@
         padding: 1em;
      }
      .thing-info_detail{
-        flex: 20%;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -61,6 +60,8 @@
      .text{
         display: flex;
         flex-direction: column;
+        height: 60%;
+        justify-content: center;
      }
      .stars{
       display: flex;
@@ -72,6 +73,7 @@
      .star{
       height: 30px;
       width: 30px;
+      filter: drop-shadow(2px 2px 1px black);
      }
     </style>
     {% endblock st %}
@@ -102,18 +104,28 @@
                     {% endif %}
                   {% endfor %}
                 {% endwith %}
-                {{raiting}}
               </div>
-                <div class="mt-2">
-                    <form action="" method="post">
-                        <button type="submit" class="btn btn-outline-dark">ADD</button>
-                    </form>
+              <div class="mt-2">
+                <form action="{% url 'stars_set' item.pk %}" method="get" class="stars-form">
+                  {{starsform.as_p}}
+                  <button type="submit" class="btn btn-sm btn-dark">Оствить отзыв</button>
+                </form>
+              </div>
+                <div class="text text-center">
+                    <span><b>О товаре</b></span>
+                    <span>Категория - {{item.cat}}</span>
+                    <span>Цена - {{item.cost}}</span>
+                    <span>В наличии - {{item.count}}</span>
                 </div>
-                <div class="text">
-                    <span>{{item.cat}}</span>
-                    <span>{{item.cost}}</span>
-                    <span>{{item.count}}</span>
-                </div>
+                
+                <div class="mt-auto">
+                  <form action="{% url 'add' item.pk 0 %}" method="post" class="d-flex flex-column">
+                      {% csrf_token %}
+                      <h6>Добавление в корзину</h6>
+                      {{addform.as_p}}
+                      <button type="submit" class="btn btn-dark">Добавить</button>
+                  </form>
+              </div>
             </div>
             <div class="comments">
               <div>
@@ -185,6 +197,8 @@
         {%block script%}
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
+        <!--<script src="{% static 'js/shop_ajax.js' %}"></script>-->
         <script>
             const img = document.querySelector('.thing-img')
             const button = document.querySelector('.btn-close')

@@ -1,0 +1,9 @@
+{% with '1 2 3 4 5' as list_st %}
+    {% for star in list_st.split %}
+          {% if raiting|slugify >= star|slugify %}
+            <img src="{% static 'img/star.png' %}" class="star"/>
+            {% else %}
+            <img src="{% static 'img/empty.png' %}" class="star"/>
+        {% endif %}
+    {% endfor %}
+{% endwith %}

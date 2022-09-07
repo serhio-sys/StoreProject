@@ -40,7 +40,7 @@
                 <div>{{i.name}}</div>
                 <div>Категория: {{i.cat}}</div>
                 <div>Цена: {{i.cost}}</div>
-                <form action="{{i.get_url_add}}" method="post" class="ajax-add">
+                <form action="{% url 'add' i.pk 1 %}" method="post" class="ajax-add">
                   {% csrf_token %}
                   <input type="submit" value="Добавить в корзину" class="subm-it">
                 </form>

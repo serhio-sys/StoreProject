@@ -17,7 +17,7 @@
             {% for i in page_obj %}
             <div class="kor-item">
                   <div class="kor-item-img">
-                  <img src="{{i.img.url}}" />
+                  <img src="{{i.img.url}}" width="100%" height="100%"/>
                   
                 <div class="kor-item-info text-center">
                   <div>{{i.name}}</div>
@@ -101,7 +101,7 @@
   }
   .kor-item-info{
     position: absolute;
-    bottom: -35%;
+    bottom: -50%;
     width: 100%;
     display: flex;
     flex-direction: column;

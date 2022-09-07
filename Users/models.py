@@ -32,7 +32,11 @@ class Basket(models.Model):
         allprice = 0
         if self.count >= 1:
             for i in self.item_set.all():
-                allprice += i.cost
+                if i.count>1:
+                    for num in range(0,i.count):
+                        allprice += i.cost
+                else:
+                    allprice += i.cost
         return allprice
              
     
