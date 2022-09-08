@@ -2,9 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import View
-from Shop.models import Category, Item, Raiting
+from Shop.models import Category, Item, Raiting,Comments, User
 from Users.models import Basket
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .form import AddToKorzina, FilterItems, SearchField,CommentForm, StarsForm
@@ -114,7 +114,7 @@ class ItemDetailView(View):
 
     def get(self,request,**kwargs):
         item = Item.objects.get(pk=kwargs['pk'])
-        comms = item.comments_set.all().select_related('user')[:3]
+        comms = item.comments_set.all().select_related('user')[:5]
         rait = item.raiting_set.all().select_related('user')
         if len(list(rait))==0:
             rait = 0
@@ -150,3 +150,11 @@ class AddOrRemoveStars(LoginRequiredMixin,View):
             rait = Raiting(num=request.GET.get('num'),user=request.user,item=item)
         rait.save()
         return redirect('item',kwargs['pk'])
+
+class DeleteCommentView(LoginRequiredMixin,View):
+    def get(self,request,pk,pk2):
+        comment = Comments.objects.get(pk=pk)
+        if request.user == comment.user:
+            comment.delete()
+        return redirect('item',pk2)
+

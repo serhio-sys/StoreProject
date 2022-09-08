@@ -100,7 +100,7 @@ class ActivateSendEmailView(LoginRequiredMixin,Mixin,View):
 
     def post(self,request):
         if request.user.activeEmail:
-            return JsonResponse({'error':True},status=203   )
+            return JsonResponse({'error':True},status=203)
         else:
             token = email_activate_token.make_token(request.user)
             uid64 = force_str(urlsafe_base64_encode(force_bytes(request.user.pk)))

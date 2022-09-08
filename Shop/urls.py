@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AddOrRemoveStars, AddToBasket, CategoryListView, CreateComment, ItemDetailView, ShopPageView, ajax_results,ResultSearchView
+from .views import AddOrRemoveStars, AddToBasket, CategoryListView, CreateComment, DeleteCommentView, ItemDetailView, ShopPageView, ajax_results,ResultSearchView
 
 urlpatterns = [
     path('',ShopPageView.as_view(),name="home2"),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('item-detail/<pk>/view/',ItemDetailView.as_view(),name='item'),
     path('<pk>/addcomment/',CreateComment.as_view(),name='comment'),
     path('<pk>/setstars/',AddOrRemoveStars.as_view(),name='stars_set'),
+    path('<pk>/deletecom/<pk2>',DeleteCommentView.as_view(),name='deletecom'),
     ]
