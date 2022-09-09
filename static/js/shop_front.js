@@ -5,9 +5,11 @@ if(closed){
         form.classList.toggle('filtr-active');
         if (form.classList.contains('filtr-active')){
             document.querySelector('.form-activator').innerHTML = '<';
+            document.querySelector('body').style.overflow="hidden";
         }
         else{
             document.querySelector('.form-activator').innerHTML = '>';
+            document.querySelector('body').style.overflow="visible";
         }
     })
 }

@@ -15,7 +15,6 @@
         background-position: center;
         background-repeat: repeat;
         height: 100vh;
-        overflow: hidden;
       }
     </style>
     {% block st %}
@@ -130,7 +129,7 @@
               </button>
               <div class="collapse navbar-collapse show" id="navbarWithDropdown">
                 <ul class="navbar-nav ms-auto me-5 gap-4">
-                  <li class="nav-item ms-auto">
+                  <li class="nav-item">
                     <a href="{% url 'results' %}" class="btn btn-outline-dark">Поиск по сайту</a>
                   </li>
                     {% if user.is_authenticated %}
@@ -156,7 +155,7 @@
                   </li>
                   {% else %}
                   <li class="nav-item dropdown me-2 center">
-                    Ваш баланс: 0 || Безаккаунтовый режим 
+                    Безаккаунтовый режим 
                   </li>
                   {% endif %}
                 </ul>

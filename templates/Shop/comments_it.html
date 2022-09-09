@@ -36,6 +36,9 @@
         align-items: center;
         justify-content: flex-end;
      }
+     .comments_new{
+        flex: 1;
+     }
      .text{
         display: flex;
         flex-direction: column;
@@ -81,6 +84,9 @@
       border-top-left-radius: 0.5em;
       border-top-right-radius: 0.5em;
      }
+     .com-conteiner_new{
+        height: 100%;
+     }
      .comment{
       display: flex;
       justify-content: center;
@@ -100,93 +106,17 @@
       color: white;
       border: 1px solid white;
      }
-     @media (max-width:800px) {
-      .thing{
-        width: 510px;
-        object-fit: contain;
-        height: 400px;
-      }
-      .thing-desk{
-        height: auto;
-      }
-      .img-block{
-          flex-direction: column;
-        }
-        .thing-body{
-          flex-direction: column;
-          align-items: center;
-          gap: 1em;
-        }
-        .container_all-detail{
-          height: auto;
-        }
-     }
-     @media (max-width:500px) {
-      .thing{
-        width: auto;
-        object-fit: contain;
-        height: auto;
-      }
-      .container_all-detail{
-          width: 100%;
-        }
-     }
     </style>
     {% endblock st %}
         {% block cont %}
       <div class="container_all-detail">
-        <div class="mt-3"><a href="{% url 'home2' %}" class="btn btn-sm btn-dark">Вернуться на главную страницу</a></div>
+        <div class="mt-3"><a href="{% url 'item' item.pk %}" class="btn btn-sm btn-dark">Вернуться на товар</a></div>
           <div class="text-center things-title style">Товар: {{item.name}}</div>
-          <div class="img-block mt-3">
-            <div class="thing">
-                <div class="thing-img">
-                  <img src="{{item.img.url}}" width="100%" height="100%" style="object-fit: cover ;"/>
-                </div>
-                <button type="button" class="btn-close btn-close-white " aria-label="Close"></button>
-            </div>
-            <div class="thing-desk ">
-                Описание: {{item.desk}}
-            </div>
-          </div>
           <div class="thing-body">
-            <div class="thing-info_detail">
-              <div class="stars">
-                {% with '1 2 3 4 5' as list_st %}
-                    {% for star in list_st.split %}
-                      {% if raiting|slugify >= star|slugify %}
-                      <img src="{% static 'img/star.png' %}" class="star"/>
-                      {% else %}
-                      <img src="{% static 'img/empty.png' %}" class="star"/>
-                    {% endif %}
-                  {% endfor %}
-                {% endwith %}
-              </div>
-              <div class="mt-2">
-                <form action="{% url 'stars_set' item.pk %}" method="get" class="stars-form">
-                  {{starsform.as_p}}
-                  <button type="submit" class="btn btn-sm btn-dark">Оствить отзыв</button>
-                </form>
-              </div>
-                <div class="text text-center">
-                    <span><b>О товаре</b></span>
-                    <span>Категория - {{item.cat}}</span>
-                    <span>Цена - {{item.cost}}</span>
-                    <span>В наличии - {{item.count}}</span>
-                </div>
-                
-                <div class="mt-auto">
-                  <form action="{% url 'add' item.pk 0 %}" method="post" class="d-flex flex-column">
-                      {% csrf_token %}
-                      <h6>Добавление в корзину</h6>
-                      {{addform.as_p}}
-                      <button type="submit" class="btn btn-dark">Добавить</button>
-                  </form>
-              </div>
-            </div>
-            <div class="comments">
-              <div class="com-conteiner">
+            <div class="comments comments_new">
+              <div class="com-conteiner com-conteiner_new">
                 <h3 class="text-center text-light">Отзывы</h3>
-                <div class="d-flex justify-content-end"><a href="{% url 'coms' item.pk %}" class="btn btn-sm btn-outline-dark com_bnt">Всего отзывов - {{count_com}}</a></div>
+                <div class="d-flex justify-content-end"><a href="http://" class="btn btn-sm btn-outline-dark com_bnt">Всего отзывов - {{count_com}}</a></div>
                 {% for com in comments %}
                 <div class="comment">
                   <div class="user">
@@ -221,7 +151,7 @@
               </button>
               <div class="collapse navbar-collapse show" id="navbarWithDropdown">
                 <ul class="navbar-nav ms-auto me-5 gap-4">
-                  <li class="nav-item">
+                  <li class="nav-item ms-auto">
                     <a href="{% url 'results' %}" class="btn btn-outline-dark">Поиск по сайту</a>
                   </li>
                     {% if user.is_authenticated %}

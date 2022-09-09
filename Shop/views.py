@@ -68,27 +68,29 @@ class AddToBasket(LoginRequiredMixin,View):
     def post(self,request,pk,num):
         if num==0:
             num=int(request.POST['num'])
-        item = Item.objects.get(pk=pk)
-        basket = Basket.objects.get(user=request.user)
-        basket.count += num
-        basket.save()
-        created = None
-        try:
-            created = Item.objects.get(name=item.name,basket=basket)
-        except:
-            Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=num,basket=basket)
+        elif num==1:
+            item = Item.objects.get(pk=pk)
+            basket = Basket.objects.get(user=request.user)
+            basket.count += num
+            basket.save()
+            created = None
+            try:
+                created = Item.objects.get(name=item.name,basket=basket)
+            except:
+                Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=num,basket=basket)
+                item.count -= num
+                item.save()
+                return redirect('home2')
+            created.count += num
+            created.save()
             item.count -= num
             item.save()
             return redirect('home2')
-        created.count += num
-        created.save()
-        item.count -= num
-        item.save()
-        return redirect('home2')
+        else:
+            return redirect('home2')
 
 class CategoryListView(View):
     def get(self,request,pk):
-        form = FilterItems()
         cat_sel = Category.objects.get(pk=pk)
         if 'min_price' and 'max_price' in request.GET:
             min_val = int(request.GET.get('min_price',0))
@@ -108,13 +110,13 @@ class CategoryListView(View):
         pag_num = request.GET.get('page')
         page_obj = pag.get_page(pag_num)
         cats = Category.objects.all()
-        return render(request=request,template_name="Shop/catlist.html",context={'page_obj':page_obj,'name':"Магазин Копеечка",'form_filt':form,'cats':cats,'cat_sel':cat_sel})
+        return render(request=request,template_name="Shop/catlist.html",context={'page_obj':page_obj,'name':"Магазин Копеечка",'form_filt':FilterItems(),'cats':cats,'cat_sel':cat_sel})
 
 class ItemDetailView(View):
 
     def get(self,request,**kwargs):
         item = Item.objects.get(pk=kwargs['pk'])
-        comms = item.comments_set.all().select_related('user')[:5]
+        comms = item.comments_set.all().select_related('user')
         rait = item.raiting_set.all().select_related('user')
         if len(list(rait))==0:
             rait = 0
@@ -123,9 +125,8 @@ class ItemDetailView(View):
             for r in list(rait):
                 allsum+=r.num
             rait = allsum/len(list(rait))
-        form_add = AddToKorzina(maxi=item.count)
-        set_stars = StarsForm()
-        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms,'raiting':int(rait),'addform':form_add,'starsform':set_stars})
+        count_of_comments = len(comms)
+        return render(request=request,template_name="Shop/detail.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms[:5],'raiting':int(rait),'addform':AddToKorzina(maxi=item.count),'starsform':StarsForm(),'count_com':count_of_comments})
 
 
 class CreateComment(LoginRequiredMixin,View):
@@ -152,9 +153,17 @@ class AddOrRemoveStars(LoginRequiredMixin,View):
         return redirect('item',kwargs['pk'])
 
 class DeleteCommentView(LoginRequiredMixin,View):
+
     def get(self,request,pk,pk2):
         comment = Comments.objects.get(pk=pk)
         if request.user == comment.user:
             comment.delete()
         return redirect('item',pk2)
 
+class AllItemCommentsView(View):
+
+    def get(self,request,pk):
+        item = Item.objects.get(pk=pk)
+        comms = item.comments_set.all().select_related('user')
+        count_of_comments = len(comms)
+        return render(request=request,template_name="Shop/comments_it.html",context={'item':item,'name':"Магазин Копеечка",'form_s':CommentForm(),'comments':comms,'count_com':count_of_comments})

@@ -89,7 +89,7 @@
     }
     .point{
         transition: all ease 300ms;
-        cursor:default;
+        cursor: pointer;
     }
     .point:hover{
         color: white;
