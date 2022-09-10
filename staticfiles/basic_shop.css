@@ -314,16 +314,6 @@ border-left: 2px solid blue;
 .changing{
   flex-direction: row-reverse;
 }
-@media(max-width:2510px){
-  .form-filtr{
-    left: -14%;
-  }
-}
-@media(max-width:1980px){
-  .form-filtr{
-    left: -20%;
-  }
-}
 @media(max-width:1440px){
   .form-filtr{
     left: -25%;
