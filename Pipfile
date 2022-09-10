@@ -10,6 +10,9 @@ psycopg2-binary = "*"
 django-debug-toolbar = "*"
 django-rest-framework = "*"
 stripe = "*"
+whitenoise = "*"
+gunicorn = "*"
+dj-database-url = "*"
 
 [dev-packages]
 

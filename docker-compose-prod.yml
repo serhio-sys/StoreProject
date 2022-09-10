@@ -6,10 +6,14 @@ services:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
   web:
     build: .
-    command: python /code/manage.py runserver 0.0.0.0:8000
+    command: gunicorn Settings.wsgi -b 0.0.0.0:8000
     environment:
     - ENVIRONMENT=production
     - DEBUG=0
+    - STRIPE_TEST_SECRET_KEY=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
+    - STRIPE_TEST_PUBLISHABLE_KEY=pk_live_51LgQ3WIB7QrJWGU5mR2hfE6eYAa01jq4XxT7SjtoIG4Qj57Xq1eaztEKjXQAvVbpr3SYINkza85XDJ4Xbi5HJDiA00cA7p9fAs
+    - EMAIL_HOST_USER=wertunwertun43@gmail.com
+    - EMAIL_HOST_PASSWORD=aoxhlcwvqkukhmrn
     ports:
     - 8000:8000
     depends_on:
