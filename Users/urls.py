@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ActivateEmailView, ActivateSendEmailView, Authentication, BasketAllClean, BasketClean, BasketView, ChangeIMG_test, HomePageView, LoginOrRegistrationView, Logout, Registrations,ResetPassword_3_View,ResetPassword_4_View,ResetPassword_2_View,ResetPassword_1_View
+from .views import ActivateEmailView, ActivateSendEmailView, Authentication, BasketAllClean, BasketClean, BasketView, ChangeIMG_test, HomePageView, LoginOrRegistrationView, Logout, Registrations,ResetPassword_3_View,ResetPassword_4_View,ResetPassword_2_View,ResetPassword_1_View, charge
 
 urlpatterns = [
     path("",HomePageView.as_view(),name='home'),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('user-basket/',BasketView.as_view(),name='basket'),
     path('rem/<pk>',BasketClean.as_view(),name='remove'),
     path('allclean-basket/',BasketAllClean.as_view(),name='clean'),
+    path('success-charge/<int:sum>/',charge,name='charge'),
 ]

@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from Shop.models import Category, Item, Raiting,Comments, User
 from Users.models import Basket
-from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .form import AddToKorzina, FilterItems, SearchField,CommentForm, StarsForm
@@ -64,27 +64,32 @@ class ShopPageView(View):
         cats = Category.objects.all()
         return render(request=request,template_name="Shop/home.html",context={'page_obj':page_obj,'name':"Магазин Копеечка",'form_filt':form,'cats':cats})
 
+def AddToBasketFunc(num,pk,user):
+    item = Item.objects.get(pk=pk)
+    basket = Basket.objects.get(user=user)
+    basket.count += num
+    basket.save()
+    created = None
+    try:
+        created = Item.objects.get(name=item.name,basket=basket)
+    except:
+        Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=num,basket=basket)
+        item.count -= num
+        item.save()
+        return redirect('home2')
+    created.count += num
+    created.save()
+    item.count -= num
+    item.save()
+
 class AddToBasket(LoginRequiredMixin,View):
     def post(self,request,pk,num):
         if num==0:
             num=int(request.POST['num'])
+            AddToBasketFunc(num=num,pk=pk,user=request.user)
+            return redirect('home2')
         elif num==1:
-            item = Item.objects.get(pk=pk)
-            basket = Basket.objects.get(user=request.user)
-            basket.count += num
-            basket.save()
-            created = None
-            try:
-                created = Item.objects.get(name=item.name,basket=basket)
-            except:
-                Item.objects.create(name=item.name,img=item.img,cost=item.cost,desk=item.desk,cat=item.cat,count=num,basket=basket)
-                item.count -= num
-                item.save()
-                return redirect('home2')
-            created.count += num
-            created.save()
-            item.count -= num
-            item.save()
+            AddToBasketFunc(num=num,pk=pk,user=request.user)
             return redirect('home2')
         else:
             return redirect('home2')

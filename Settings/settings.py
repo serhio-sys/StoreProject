@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Shop.apps.ShopConfig',
     'Users.apps.UsersConfig',
+    'Orders.apps.OrdersConfig',
     'debug_toolbar',
     'rest_framework',
 ]
@@ -177,8 +178,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'wertunwertun43@gmail.com'
-EMAIL_HOST_PASSWORD = 'aoxhlcwvqkukhmrn'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get("STRIPE_TEST_PUBLISHABLE_KEY")
+STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY")
 
 if DEBUG:
     import mimetypes

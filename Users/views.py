@@ -1,4 +1,5 @@
-import re
+import stripe
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView,View
@@ -9,12 +10,15 @@ from django.contrib.auth import get_user_model
 from django.http.response import JsonResponse
 from django.contrib.auth import logout,authenticate,login
 from django.contrib.auth.mixins import LoginRequiredMixin,AccessMixin
+from django.contrib.auth.models import Permission
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
 from .utils import  email_activate_token
 from django.core.mail import send_mail
 from django.utils.encoding import force_str,force_bytes
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.core.paginator import Paginator
+
+stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
 class UnLoginMixin(AccessMixin):
 
@@ -107,7 +111,7 @@ class ActivateSendEmailView(LoginRequiredMixin,Mixin,View):
             url = '127.0.0.1:8000' + reverse_lazy('activeEmail',kwargs={'uidb64':uid64,'token':token})
 
             send_mail('Активация email http://127.0.0.1:8000/',
-            f"Здравствуйте {request.user.username}! Для активации акаунта перейдите по ссылке: <a href=\"{url}\">{url}</a>",
+            f"Здравствуйте {request.user.username}! Для активации акаунта перейдите по ссылке: {url}",
             "pososi@gmail.com", [request.user.email,],
             fail_silently=False    
             )
@@ -138,7 +142,7 @@ class BasketView(LoginRequiredMixin,Mixin,View):
         pag = Paginator(list(items),10)
         pag_num = request.GET.get('page')
         page_obj = pag.get_page(pag_num)
-        return render(request=request,template_name='Users/korzina.html',context={"basket":basket,"page_obj":page_obj,"name":"Магазин Копеечка"})
+        return render(request=request,template_name='Users/korzina.html',context={"basket":basket,"page_obj":page_obj,"name":"Магазин Копеечка",'stripe_key':settings.STRIPE_TEST_PUBLISHABLE_KEY})
 
 class BasketClean(LoginRequiredMixin,View):
 
@@ -174,19 +178,34 @@ class BasketAllClean(LoginRequiredMixin,View):
                 basket.save()
                 i.delete()
             count = i.count
-            for num in range(0,count+1):
+            for num in range(0,count):
                 if i.count == 1:
                     abstritem.count += 1
                     basket.count -= 1
                     basket.save()
                     abstritem.save()
-                    i.delete()            
-                    return redirect('basket')   
+                    i.delete() 
                 else:
                     i.count -= 1  
                     abstritem.count += 1
                     basket.count -= 1
         return redirect('basket')
+
+def charge(request,sum):
+    permission = Permission.objects.get(codename='special_status')
+    u = request.user
+    u.user_permissions.add(permission)
+
+    if request.method == 'POST':
+        charge = stripe.Charge.create(
+        amount=sum,
+        currency='usd',
+        description='Django_Store',
+        source=request.POST['stripeToken']
+        )
+        return render(request, 'charge.html',context={"mess":f"You success buy on {sum}$"})
+
+
 
 def pageNotFound(request, exception):
     return render(request=request,template_name='404.html',status=404)

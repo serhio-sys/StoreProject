@@ -71,7 +71,15 @@
     </div>
     <div class="kor-title" style="font-size: 1.8em;">К оплате: {{basket.AllPrice}}</div>
     <div class="buttons">
-        <a href="">Оплатить</a>
+      <form action="{% url 'charge' basket.AllPrice %}" method="post">
+        {% csrf_token %}
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="{{ stripe_key }}"
+        data-description="Django_Store"
+        data-amount="{{basket.AllPrice}}00"
+        data-locale="auto">
+        </script>
+      </form>
         <a href="{% url 'clean' %}">Очистить корзину</a>
     </div>
 </div>
@@ -142,6 +150,16 @@
 {%block continue%}
 {%endblock continue%}
 {%block script%}
+<script>
+  document.querySelector('.stripe-button-el span').style.background = "transparent";
+  document.querySelector('.stripe-button-el span').style.border = "2px solid white";
+  document.querySelector('.stripe-button-el span').style.padding = "0 5px";
+  document.querySelector('.stripe-button-el span').style.height= "100%";
+  document.querySelector('.stripe-button-el').style.padding = "0";
+  document.querySelector('.stripe-button-el').style.background = "transparent";
+  document.querySelector('.stripe-button-el span').innerHTML = "Оплатить через карту";
+
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {%endblock script%}

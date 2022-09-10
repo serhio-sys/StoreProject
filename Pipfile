@@ -9,6 +9,7 @@ pillow = "*"
 psycopg2-binary = "*"
 django-debug-toolbar = "*"
 django-rest-framework = "*"
+stripe = "*"
 
 [dev-packages]
 

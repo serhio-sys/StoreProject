@@ -1,0 +1,129 @@
+.style{
+    font-weight: 100;
+    font-style: normal;
+ }
+ .img-block{
+    width: calc(100% - 2em);
+    height: auto;
+    padding: 0 1em;
+    display: flex;
+    gap: 1em;
+ }
+ .thing-desk{
+    height: 100%;
+ }
+ .thing-body{
+    width: calc(100% - 2em);
+    height: 100%;
+    display: flex;
+    padding: 1em;
+ }
+ .thing-info_detail{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-width: 200px;
+    width: 100%;
+ }
+ .comments{
+    flex: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+ }
+ .text{
+    display: flex;
+    flex-direction: column;
+    height: 60%;
+    justify-content: center;
+ }
+ .stars{
+  display: flex;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4em;
+ }
+ .star{
+  height: 30px;
+  width: 30px;
+  filter: drop-shadow(2px 2px 1px black);
+ }
+ .com-form{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: calc(100% - 2em);
+  padding: 1em;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  background-color: rgba(0, 0, 0, 0.6);
+ }
+ .com-form textarea{
+  max-height: 100px;
+ }
+ .com-form label{
+  display: none;
+ }
+ .btn-place{
+  display: flex;
+  justify-content: flex-end;
+ }
+ .com-conteiner{
+  width: calc(100% - 2em);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1em;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+ }
+ .comment{
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  color: white;
+  height: 30px;
+  border-bottom: 2px solid white;
+ }
+ .user{
+ font-weight: 600;
+}
+ .com{
+  font-weight: 100;
+  font-style: italic;
+ }
+ .com_bnt{
+  color: white;
+  border: 1px solid white;
+ }
+ @media (max-width:800px) {
+  .thing{
+    width: 510px;
+    object-fit: contain;
+    height: 400px;
+  }
+  .thing-desk{
+    height: auto;
+  }
+  .img-block{
+      flex-direction: column;
+    }
+    .thing-body{
+      flex-direction: column;
+      align-items: center;
+      gap: 1em;
+    }
+    .container_all-detail{
+      height: auto;
+    }
+ }
+ @media (max-width:500px) {
+  .thing{
+    width: auto;
+    object-fit: contain;
+    height: auto;
+  }
+  .container_all-detail{
+      width: 100%;
+    }
+ }

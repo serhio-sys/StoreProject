@@ -109,16 +109,7 @@
                    <li class="nav-item dropdown me-2" style="display: flex;align-items: center;">
                       {{user.username}}
                   </li>
-                  <li class="nav-item dropdown me-2">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Ваш баланс: {{user.balance}}
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <li><a class="dropdown-item text-center" href="">Пополнить счёт</a></li>
-                      <li><a class="dropdown-item text-center" href="#">История покупок</a></li>
-                      <li><a class="dropdown-item text-center" href="">Скидочный купон</a></li>
-                    </ul>
-                  </li>
+                 
                   {% else %}
                   <li class="nav-item dropdown me-2 center">
                     Безаккаунтовый режим 
