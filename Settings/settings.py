@@ -177,6 +177,14 @@ STATICFILES_DIRS =(os.path.join(BASE_DIR, 'static'),)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'
+
+CLOUDINARY_STORAGE = {
+             'CLOUD_NAME': 'Django-test',
+             'API_KEY': '243258854741296',
+             'API_SECRET': 'oOtqhbhoqpj7DMnX2ymaWu-fAWI'
+            }
+DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
+
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 
