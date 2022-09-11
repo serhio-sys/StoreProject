@@ -27,7 +27,7 @@ urlpatterns = [
     path('shop/',include("Shop.urls")),
     path('orders/', include("Orders.urls")),
     path('__debug__/', include(debug_toolbar.urls)),
-    re_path(r'^media/(?P<path>,*)$',serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^media/(?P<path>.*)$',serve, {'document_root': settings.MEDIA_ROOT}),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is False:
