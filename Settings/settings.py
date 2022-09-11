@@ -56,9 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',   
-    'cloudinary_storage',
-    'cloudinary',
+    'django.contrib.staticfiles',
     'Shop.apps.ShopConfig',
     'Users.apps.UsersConfig',
     'Orders.apps.OrdersConfig',
@@ -177,14 +175,6 @@ STATICFILES_DIRS =(os.path.join(BASE_DIR, 'static'),)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-
-CLOUDINARY_STORAGE = {
-             'CLOUD_NAME': 'Django-test',
-             'API_KEY': '243258854741296',
-             'API_SECRET': 'oOtqhbhoqpj7DMnX2ymaWu-fAWI'
-            }
-DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
-
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 
